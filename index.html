@@ -1,3 +1,4 @@
+
 <!-- PRANAV PARASAR -->
 <!DOCTYPE html>
 <html lang="en">
@@ -14,6 +15,43 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="style.css">
+
+  <style>
+    .history-tools {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .history-button {
+      width: 36px;
+      height: 36px;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      border: 1px solid rgba(255,255,255,.13);
+      border-radius: 9px;
+      background: rgba(255,255,255,.05);
+      color: inherit;
+      cursor: pointer;
+      transition: .2s;
+    }
+
+    .history-button:hover:not(:disabled) {
+      background: rgba(118,87,255,.2);
+      border-color: #7657ff;
+    }
+
+    .history-button:disabled {
+      opacity: .35;
+      cursor: not-allowed;
+    }
+
+    .history-button svg {
+      width: 19px;
+      height: 19px;
+    }
+  </style>
 </head>
 
 <body>
@@ -197,9 +235,50 @@
         <div class="toolbar-divider"></div>
 
 
+        <!-- UNDO / REDO ICONS -->
+        <div class="tool-group history-tools">
+
+          <button
+            id="undoBtn"
+            class="history-button"
+            type="button"
+            title="Undo last action"
+            aria-label="Undo"
+            disabled
+          >
+            <svg viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2"
+                 stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 7v6h6"/>
+              <path d="M3 13a9 9 0 1 1 2.64 6.36"/>
+            </svg>
+          </button>
+
+          <button
+            id="redoBtn"
+            class="history-button"
+            type="button"
+            title="Redo last action"
+            aria-label="Redo"
+            disabled
+          >
+            <svg viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2"
+                 stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 7v6h-6"/>
+              <path d="M21 13a9 9 0 1 0-2.64 6.36"/>
+            </svg>
+          </button>
+
+        </div>
+
+
+        <div class="toolbar-divider"></div>
+
+
         <div class="tool-group editing-tools">
 
-          <button data-mode="select" class="tool-button active" title="Select">
+          <button data-mode="select" class="tool-button active" title="Select / Edit existing text">
             ↖
           </button>
 
