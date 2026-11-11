@@ -1,5 +1,5 @@
 
-<!-- PRANAV PARASAR -->
+<!-- PRANAV PARASAR | WEBGLOBE -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,44 +17,242 @@
   <link rel="stylesheet" href="style.css">
 
   <style>
-    .history-tools {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
+    /* =================================
+       WEBGLOBE INTRO ANIMATION
+    ================================= */
 
-    .history-button {
-      width: 36px;
-      height: 36px;
-      display: inline-flex;
+    #introScreen {
+      position: fixed;
+      inset: 0;
+      z-index: 99999;
+      background: #030308;
+      display: flex;
       justify-content: center;
       align-items: center;
-      border: 1px solid rgba(255,255,255,.13);
-      border-radius: 9px;
+      overflow: hidden;
+      opacity: 1;
+      visibility: visible;
+      transition: opacity .65s ease, visibility .65s ease;
+    }
+
+    #introScreen.intro-hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .intro-glow {
+      position: absolute;
+      width: 430px;
+      height: 430px;
+      border-radius: 50%;
+      background: radial-gradient(
+        circle,
+        rgba(105, 65, 255, .17),
+        rgba(35, 90, 255, .06) 45%,
+        transparent 72%
+      );
+      filter: blur(25px);
+      animation: glowPulse 2.5s ease-in-out infinite alternate;
+    }
+
+    .intro-particles {
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(#7755ff 1px, transparent 1px),
+        radial-gradient(#2878ff 1px, transparent 1px);
+      background-size: 75px 75px, 110px 110px;
+      background-position: 0 0, 35px 40px;
+      opacity: .24;
+      animation: particlesMove 12s linear infinite;
+    }
+
+    .intro-content {
+      position: relative;
+      z-index: 2;
+      width: min(90%, 620px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .intro-logo {
+      width: min(100%, 540px);
+      height: 190px;
+      object-fit: cover;
+      object-position: center;
+      opacity: 0;
+      transform: scale(.72);
+      filter: drop-shadow(0 0 0 transparent);
+      animation: logoReveal 1.35s cubic-bezier(.2,.8,.2,1) .15s forwards;
+    }
+
+    .intro-credit {
+      margin-top: -8px;
+      color: #c9c5ff;
+      font-size: 15px;
+      letter-spacing: 3px;
+      font-weight: 500;
+      font-style: italic;
+      opacity: 0;
+      transform: translateY(14px);
+      animation: creditReveal .75s ease 1.05s forwards;
+    }
+
+    .intro-credit strong {
+      color: #ffffff;
+      font-weight: 800;
+    }
+
+    .intro-loader {
+      width: 165px;
+      height: 3px;
+      margin-top: 35px;
+      background: rgba(255,255,255,.1);
+      border-radius: 20px;
+      overflow: hidden;
+      opacity: 0;
+      animation: loaderAppear .4s ease 1.1s forwards;
+    }
+
+    .intro-loader span {
+      display: block;
+      width: 0;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #8c45ff, #367aff);
+      box-shadow: 0 0 12px #7657ff;
+      animation: loading 1.25s ease 1.15s forwards;
+    }
+
+    .intro-skip {
+      position: absolute;
+      bottom: 32px;
+      right: 35px;
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 30px;
       background: rgba(255,255,255,.05);
-      color: inherit;
+      color: #aaa7c7;
+      padding: 9px 18px;
+      font-size: 12px;
+      letter-spacing: 1px;
       cursor: pointer;
-      transition: .2s;
+      transition: .25s;
     }
 
-    .history-button:hover:not(:disabled) {
-      background: rgba(118,87,255,.2);
-      border-color: #7657ff;
+    .intro-skip:hover {
+      color: white;
+      border-color: #8058ff;
+      background: rgba(118,87,255,.15);
     }
 
-    .history-button:disabled {
-      opacity: .35;
-      cursor: not-allowed;
+    @keyframes logoReveal {
+      0% {
+        opacity: 0;
+        transform: scale(.72);
+        filter: drop-shadow(0 0 0 #7657ff);
+      }
+      65% {
+        opacity: 1;
+        transform: scale(1.04);
+        filter: drop-shadow(0 0 28px rgba(118,87,255,.55));
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1);
+        filter: drop-shadow(0 0 16px rgba(70,90,255,.28));
+      }
     }
 
-    .history-button svg {
-      width: 19px;
-      height: 19px;
+    @keyframes creditReveal {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes loading {
+      to { width: 100%; }
+    }
+
+    @keyframes loaderAppear {
+      to { opacity: 1; }
+    }
+
+    @keyframes glowPulse {
+      from { transform: scale(.85); opacity: .6; }
+      to { transform: scale(1.15); opacity: 1; }
+    }
+
+    @keyframes particlesMove {
+      from { background-position: 0 0, 35px 40px; }
+      to { background-position: 150px 150px, -75px 180px; }
+    }
+
+    @media (max-width: 600px) {
+      .intro-logo {
+        height: 145px;
+      }
+
+      .intro-credit {
+        font-size: 11px;
+        letter-spacing: 2px;
+      }
+
+      .intro-skip {
+        right: 18px;
+        bottom: 20px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .intro-logo,
+      .intro-credit,
+      .intro-loader,
+      .intro-loader span,
+      .intro-glow,
+      .intro-particles {
+        animation-duration: .01ms;
+        animation-delay: 0ms;
+      }
     }
   </style>
 </head>
 
 <body>
+
+  <!-- WEBGLOBE INTRO SCREEN -->
+  <div id="introScreen">
+
+    <div class="intro-particles"></div>
+    <div class="intro-glow"></div>
+
+    <div class="intro-content">
+
+      <img
+        src="webglobe-logo.png"
+        alt="WEBGLOBE"
+        class="intro-logo"
+      >
+
+      <div class="intro-credit">
+        <em>by <strong>PRANAV PARASAR</strong></em>
+      </div>
+
+      <div class="intro-loader">
+        <span></span>
+      </div>
+
+    </div>
+
+    <button id="skipIntro" class="intro-skip" type="button">
+      SKIP INTRO →
+    </button>
+
+  </div>
+
 
   <main class="app">
 
@@ -158,7 +356,6 @@
     <!-- PDF EDITOR -->
     <section id="pagewrap" class="editor" hidden>
 
-      <!-- DOCUMENT HEADER -->
       <div class="document-header">
 
         <div class="document-details">
@@ -191,14 +388,8 @@
           </button>
 
           <div class="page-counter">
-            <input
-              id="pageNo"
-              type="number"
-              min="1"
-              value="1"
-              aria-label="Current page"
-              disabled
-            >
+            <input id="pageNo" type="number" min="1" value="1"
+                   aria-label="Current page" disabled>
             <span>/</span>
             <span id="pages">0</span>
           </div>
@@ -209,96 +400,45 @@
 
         </div>
 
-
         <div class="toolbar-divider"></div>
-
 
         <div class="tool-group">
 
-          <button id="minus" class="tool-button" disabled title="Zoom out">
-            −
-          </button>
-
+          <button id="minus" class="tool-button" disabled title="Zoom out">−</button>
           <span id="zoom" class="zoom-label">100%</span>
-
-          <button id="plus" class="tool-button" disabled title="Zoom in">
-            +
-          </button>
-
-          <button id="fit" class="tool-button tool-text" disabled>
-            Fit
-          </button>
+          <button id="plus" class="tool-button" disabled title="Zoom in">+</button>
+          <button id="fit" class="tool-button tool-text" disabled>Fit</button>
 
         </div>
 
-
         <div class="toolbar-divider"></div>
 
-
-        <!-- UNDO / REDO ICONS -->
         <div class="tool-group history-tools">
 
-          <button
-            id="undoBtn"
-            class="history-button"
-            type="button"
-            title="Undo last action"
-            aria-label="Undo"
-            disabled
-          >
-            <svg viewBox="0 0 24 24" fill="none"
-                 stroke="currentColor" stroke-width="2"
-                 stroke-linecap="round" stroke-linejoin="round">
-              <path d="M3 7v6h6"/>
-              <path d="M3 13a9 9 0 1 1 2.64 6.36"/>
-            </svg>
+          <button id="undoBtn" class="history-button" type="button"
+                  title="Undo" aria-label="Undo" disabled>
+            ↶
           </button>
 
-          <button
-            id="redoBtn"
-            class="history-button"
-            type="button"
-            title="Redo last action"
-            aria-label="Redo"
-            disabled
-          >
-            <svg viewBox="0 0 24 24" fill="none"
-                 stroke="currentColor" stroke-width="2"
-                 stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 7v6h-6"/>
-              <path d="M21 13a9 9 0 1 0-2.64 6.36"/>
-            </svg>
+          <button id="redoBtn" class="history-button" type="button"
+                  title="Redo" aria-label="Redo" disabled>
+            ↷
           </button>
 
         </div>
 
-
         <div class="toolbar-divider"></div>
-
 
         <div class="tool-group editing-tools">
 
-          <button data-mode="select" class="tool-button active" title="Select / Edit existing text">
-            ↖
-          </button>
-
-          <button data-mode="text" class="tool-button" title="Add text">
-            T
-          </button>
-
-          <button data-mode="draw" class="tool-button" title="Draw">
-            ✎
-          </button>
-
-          <button data-mode="highlight" class="tool-button" title="Highlight">
-            ▰
-          </button>
+          <button data-mode="select" class="tool-button active" title="Select">↖</button>
+          <button data-mode="text" class="tool-button" title="Add text">T</button>
+          <button data-mode="draw" class="tool-button" title="Draw">✎</button>
+          <button data-mode="highlight" class="tool-button" title="Highlight">▰</button>
 
         </div>
 
-
         <div class="toolbar-divider"></div>
-
 
         <div class="tool-group">
 
@@ -309,38 +449,19 @@
 
           <label class="font-control">
             <span>Text size</span>
-            <input
-              id="fontSize"
-              type="number"
-              min="8"
-              max="72"
-              value="18"
-            >
+            <input id="fontSize" type="number" min="8" max="72" value="18">
           </label>
 
         </div>
 
-
         <div class="toolbar-divider"></div>
-
 
         <div class="tool-group page-tools">
 
-          <button id="rotate" class="tool-button tool-text" disabled>
-            ↻ Rotate
-          </button>
-
-          <button id="remove" class="tool-button tool-text danger" disabled>
-            ✕ Delete
-          </button>
-
-          <button id="split" class="tool-button tool-text" disabled>
-            ↓ Page
-          </button>
-
-          <button id="merge" class="tool-button tool-text">
-            + Merge
-          </button>
+          <button id="rotate" class="tool-button tool-text" disabled>↻ Rotate</button>
+          <button id="remove" class="tool-button tool-text danger" disabled>✕ Delete</button>
+          <button id="split" class="tool-button tool-text" disabled>↓ Page</button>
+          <button id="merge" class="tool-button tool-text">+ Merge</button>
 
         </div>
 
@@ -353,10 +474,8 @@
         <div id="stage" class="stage">
 
           <div class="canvas-container">
-
             <canvas id="pdf"></canvas>
             <canvas id="overlay"></canvas>
-
           </div>
 
         </div>
@@ -391,32 +510,50 @@
 
 
     <!-- HIDDEN FILE INPUTS -->
-    <input
-      type="file"
-      id="fileInput"
-      accept="application/pdf,.pdf"
-      hidden
-    >
+    <input type="file" id="fileInput"
+           accept="application/pdf,.pdf" hidden>
 
-    <input
-      type="file"
-      id="mergeInput"
-      accept="application/pdf,.pdf"
-      multiple
-      hidden
-    >
+    <input type="file" id="mergeInput"
+           accept="application/pdf,.pdf" multiple hidden>
 
-    <!-- TOAST MESSAGE -->
     <div id="toast" class="toast" role="status"></div>
 
   </main>
 
 
-  <!-- PDF.JS LIBRARY -->
+  <!-- PDF.JS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 
-  <!-- PDF-LIB LIBRARY -->
+  <!-- PDF-LIB -->
   <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+
+  <!-- INTRO ANIMATION CONTROL -->
+  <script>
+    (() => {
+      const intro = document.getElementById("introScreen");
+      const skip = document.getElementById("skipIntro");
+
+      let finished = false;
+
+      function closeIntro() {
+        if (finished) return;
+
+        finished = true;
+        intro.classList.add("intro-hidden");
+
+        setTimeout(() => {
+          intro.remove();
+        }, 700);
+      }
+
+      const timer = setTimeout(closeIntro, 2700);
+
+      skip.addEventListener("click", () => {
+        clearTimeout(timer);
+        closeIntro();
+      });
+    })();
+  </script>
 
   <!-- APPLICATION JAVASCRIPT -->
   <script src="script.js"></script>
