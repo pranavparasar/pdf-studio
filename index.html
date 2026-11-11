@@ -1,4 +1,346 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>PDF Studio — Read & Edit PDFs</title><link rel="stylesheet" href="style.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script></head><body>
-<header><a class="brand" href="#"><i>P</i> PDF <b>Studio</b></a><div><button id="openBtn">Open PDF</button><button class="primary" id="downloadBtn" disabled>Download PDF</button></div></header>
-<main><aside><small>DOCUMENT</small><div class="filebox"><strong id="fileName">No document open</strong><span id="fileInfo">Choose a PDF to begin</span></div><small>EDIT TOOLS</small><button class="tool active" data-mode="select">↖ &nbsp; Select / Move</button><button class="tool" data-mode="text">T &nbsp; Add text</button><button class="tool" data-mode="draw">✎ &nbsp; Freehand draw</button><button class="tool" data-mode="highlight">▰ &nbsp; Highlight area</button><div class="options"><label>Ink colour <input id="color" type="color" value="#e11d48"></label><label>Text size <input id="fontSize" type="number" min="8" max="72" value="18"></label></div><small>PAGE TOOLS</small><button class="tool" id="rotate" disabled>↻ &nbsp; Rotate page</button><button class="tool" id="remove" disabled>⌫ &nbsp; Delete page</button><button class="tool" id="split" disabled>⇩ &nbsp; Download current page</button><button class="tool" id="merge">⊕ &nbsp; Merge another PDF</button><input id="fileInput" type="file" accept="application/pdf" hidden><input id="mergeInput" type="file" accept="application/pdf" multiple hidden><p class="privacy">Your files stay in your browser. PDF Studio does not upload your documents.</p></aside>
-<section><nav><span id="docTitle">Welcome to PDF Studio</span><div><button id="prev" disabled>‹</button><input id="pageNo" type="number" min="1" value="1" disabled><span>/ <b id="pages">0</b></span><button id="next" disabled>›</button><em></em><button id="minus" disabled>−</button><span id="zoom">100%</span><button id="plus" disabled>+</button><button id="fit" disabled>□</button></div></nav><div class="stage" id="stage"><div class="welcome" id="welcome"><div class="heroicon">▤</div><h1>Your PDFs, <span>made manageable.</span></h1><p>Read, annotate, highlight and make quick edits — all in one place.</p><button class="primary" id="welcomeOpen">Open a PDF</button><small>✓ Private local processing &nbsp; ✓ No account required &nbsp; ✓ Free to use</small></div><div class="pagewrap" id="pagewrap" hidden><div class="stack"><canvas id="pdf"></canvas><canvas id="overlay"></canvas></div></div></div><footer><span id="status">Ready</span><span>PDF Studio · Browser-based PDF tools</span></footer></section></main><div id="toast"></div><script src="script.js"></script></body></html>
+<!-- PRANAV PARASAR -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>PDF Studio | WEBGLOBE</title>
+
+  <meta name="description" content="PDF Studio - Read, annotate, highlight, rotate, merge and edit PDF documents online.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <main class="app">
+
+    <!-- TOP NAVIGATION -->
+    <header class="topbar">
+
+      <div class="app-brand">
+        <div class="app-icon">PDF</div>
+        <div>
+          <h1>PDF Studio</h1>
+          <p>Read. Edit. Create.</p>
+        </div>
+      </div>
+
+      <div class="topbar-right">
+        <span class="privacy-label">
+          <span class="privacy-dot"></span>
+          Private browser processing
+        </span>
+
+        <button id="openBtn" class="btn btn-primary">
+          + Open PDF
+        </button>
+      </div>
+
+    </header>
+
+
+    <!-- WELCOME / UPLOAD PAGE -->
+    <section id="welcome" class="welcome">
+
+      <div class="welcome-content">
+
+        <div class="welcome-badge">
+          <span class="badge-dot"></span>
+          YOUR PDF WORKSPACE
+        </div>
+
+        <h2>
+          Your PDFs.<br>
+          <span>Made manageable.</span>
+        </h2>
+
+        <p class="welcome-description">
+          A simple and powerful workspace to read, annotate,
+          highlight, organize and manage your PDF documents.
+        </p>
+
+        <button id="welcomeOpen" class="btn btn-primary upload-button">
+          <span class="upload-icon">↑</span>
+          Upload your PDF
+        </button>
+
+        <p class="supported-files">
+          Supports PDF files · Your files stay in your browser
+        </p>
+
+        <div class="feature-grid">
+
+          <div class="feature-card">
+            <div class="feature-icon">▤</div>
+            <h3>Read PDF</h3>
+            <p>View pages with zoom and navigation.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">✎</div>
+            <h3>Annotate</h3>
+            <p>Add text, drawings and highlights.</p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">⤓</div>
+            <h3>Download</h3>
+            <p>Save your edited PDF documents.</p>
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- WEBGLOBE BRANDING -->
+      <div class="webglobe-brand">
+
+        <img
+          src="webglobe-logo.png"
+          alt="WEBGLOBE Logo"
+          class="webglobe-logo"
+        >
+
+        <div class="brand-credit">
+          <em>by <strong>PRANAV PARASAR</strong></em>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- PDF EDITOR -->
+    <section id="pagewrap" class="editor" hidden>
+
+      <!-- DOCUMENT HEADER -->
+      <div class="document-header">
+
+        <div class="document-details">
+          <div class="document-icon">PDF</div>
+
+          <div>
+            <h2 id="docTitle">Untitled PDF</h2>
+            <p>
+              <span id="fileName">No file selected</span>
+              <span class="separator">·</span>
+              <span id="fileInfo">0 pages</span>
+            </p>
+          </div>
+        </div>
+
+        <button id="downloadBtn" class="btn btn-primary" disabled>
+          ↓ Download PDF
+        </button>
+
+      </div>
+
+
+      <!-- EDITING TOOLBAR -->
+      <div class="toolbar">
+
+        <div class="tool-group">
+
+          <button id="prev" class="tool-button" disabled title="Previous page">
+            ‹
+          </button>
+
+          <div class="page-counter">
+            <input
+              id="pageNo"
+              type="number"
+              min="1"
+              value="1"
+              aria-label="Current page"
+              disabled
+            >
+            <span>/</span>
+            <span id="pages">0</span>
+          </div>
+
+          <button id="next" class="tool-button" disabled title="Next page">
+            ›
+          </button>
+
+        </div>
+
+
+        <div class="toolbar-divider"></div>
+
+
+        <div class="tool-group">
+
+          <button id="minus" class="tool-button" disabled title="Zoom out">
+            −
+          </button>
+
+          <span id="zoom" class="zoom-label">100%</span>
+
+          <button id="plus" class="tool-button" disabled title="Zoom in">
+            +
+          </button>
+
+          <button id="fit" class="tool-button tool-text" disabled>
+            Fit
+          </button>
+
+        </div>
+
+
+        <div class="toolbar-divider"></div>
+
+
+        <div class="tool-group editing-tools">
+
+          <button data-mode="select" class="tool-button active" title="Select">
+            ↖
+          </button>
+
+          <button data-mode="text" class="tool-button" title="Add text">
+            T
+          </button>
+
+          <button data-mode="draw" class="tool-button" title="Draw">
+            ✎
+          </button>
+
+          <button data-mode="highlight" class="tool-button" title="Highlight">
+            ▰
+          </button>
+
+        </div>
+
+
+        <div class="toolbar-divider"></div>
+
+
+        <div class="tool-group">
+
+          <label class="color-control" title="Choose annotation color">
+            <span>Color</span>
+            <input id="color" type="color" value="#7657ff">
+          </label>
+
+          <label class="font-control">
+            <span>Text size</span>
+            <input
+              id="fontSize"
+              type="number"
+              min="8"
+              max="72"
+              value="18"
+            >
+          </label>
+
+        </div>
+
+
+        <div class="toolbar-divider"></div>
+
+
+        <div class="tool-group page-tools">
+
+          <button id="rotate" class="tool-button tool-text" disabled>
+            ↻ Rotate
+          </button>
+
+          <button id="remove" class="tool-button tool-text danger" disabled>
+            ✕ Delete
+          </button>
+
+          <button id="split" class="tool-button tool-text" disabled>
+            ↓ Page
+          </button>
+
+          <button id="merge" class="tool-button tool-text">
+            + Merge
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <!-- PDF VIEWER -->
+      <div class="viewer">
+
+        <div id="stage" class="stage">
+
+          <div class="canvas-container">
+
+            <canvas id="pdf"></canvas>
+            <canvas id="overlay"></canvas>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- STATUS BAR -->
+      <div class="statusbar">
+
+        <p id="status" role="status">
+          Open a PDF to get started.
+        </p>
+
+        <span class="status-right">
+          PDF Studio · WEBGLOBE
+        </span>
+
+      </div>
+
+    </section>
+
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <p>
+        PDF Studio
+        <span>·</span>
+        Made with care by WEBGLOBE
+      </p>
+    </footer>
+
+
+    <!-- HIDDEN FILE INPUTS -->
+    <input
+      type="file"
+      id="fileInput"
+      accept="application/pdf,.pdf"
+      hidden
+    >
+
+    <input
+      type="file"
+      id="mergeInput"
+      accept="application/pdf,.pdf"
+      multiple
+      hidden
+    >
+
+    <!-- TOAST MESSAGE -->
+    <div id="toast" class="toast" role="status"></div>
+
+  </main>
+
+
+  <!-- PDF.JS LIBRARY -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+  <!-- PDF-LIB LIBRARY -->
+  <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+
+  <!-- APPLICATION JAVASCRIPT -->
+  <script src="script.js"></script>
+
+</body>
+</html>
